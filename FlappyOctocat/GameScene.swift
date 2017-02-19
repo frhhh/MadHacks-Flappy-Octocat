@@ -90,7 +90,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(Ground)
         
         //set up octocat image
-        Octocat = SKSpriteNode(imageNamed: "Octocat")
+        Octocat = SKSpriteNode(imageNamed: "Octocat_02")
         Octocat.size = CGSize(width: 60, height: 50)
         Octocat.position = CGPoint(x: self.frame.width / 2 - Octocat.frame.width, y: self.frame.height / 2)
         
@@ -112,7 +112,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func createBTN(){
         
-        restart = SKSpriteNode(imageNamed: "RestartBtn")
+        restart = SKSpriteNode(imageNamed: "Restart")
         restart.size = CGSize(width: 200, height: 100)
         restart.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2)
         restart.zPosition = 6
@@ -175,7 +175,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func createWalls(){
         
-        let scoreNode = SKSpriteNode(imageNamed: "star")
+        let scoreNode = SKSpriteNode(imageNamed: "star_05")
         
         scoreNode.size = CGSize(width: 50, height: 50)
         scoreNode.position = CGPoint(x: self.frame.width + 25, y: self.frame.height / 2)
@@ -192,8 +192,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //let wallPair = SKNode()
         wallPair.name = "wallPair"
         
-        let topWall = SKSpriteNode(imageNamed: "Wall")
-        let btmWall = SKSpriteNode(imageNamed: "Wall")
+        let topWall = SKSpriteNode(imageNamed: "Wall_Redbull_02")
+        let btmWall = SKSpriteNode(imageNamed: "Wall_Redbull_02")
         
         topWall.position = CGPoint(x: self.frame.width + 25, y: self.frame.height / 2 + 350)
         btmWall.position = CGPoint(x: self.frame.width + 25, y: self.frame.height / 2 - 350)
