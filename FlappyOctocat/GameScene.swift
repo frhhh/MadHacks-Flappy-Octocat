@@ -7,13 +7,12 @@
 //
 
 import SpriteKit
-import GameplayKit
+//import GameplayKit
 
 struct GameObjects {
     static let Octocat : UInt32 = 0x1 << 1
     static let Ground : UInt32 = 0x1 << 2
     static let Wall : UInt32 = 0x1 << 3
-    static let Score : UInt32 = 0x1 << 4
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
@@ -94,8 +93,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         Octocat.physicsBody = SKPhysicsBody(circleOfRadius: Octocat.frame.height / 2)
         Octocat.physicsBody?.categoryBitMask = GameObjects.Octocat
         Octocat.physicsBody?.collisionBitMask = GameObjects.Ground | GameObjects.Wall
-        Octocat.physicsBody?.contactTestBitMask = GameObjects.Ground | GameObjects.Wall | GameObjects.Score
-        Octocat.physicsBody?.affectedByGravity = true
+        Octocat.physicsBody?.affectedByGravity = false
         Octocat.physicsBody?.isDynamic = true
         
         Octocat.zPosition = 2
@@ -119,67 +117,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         restart.run(SKAction.scale(to: 1.0, duration: 0.3))
         
     }
-    
-    func didBegin(_ contact: SKPhysicsContact) {
-        let firstBody = contact.bodyA
-        let secondBody = contact.bodyB
-        
-        
-        if firstBody.categoryBitMask == GameObjects.Score && secondBody.categoryBitMask == GameObjects.Octocat{
-            
-            score += 1
-            scoreLb.text = "\(score)"
-            firstBody.node?.removeFromParent()
-            
-        }
-        else if firstBody.categoryBitMask == GameObjects.Octocat && secondBody.categoryBitMask == GameObjects.Score {
-            
-            score += 1
-            scoreLb.text = "\(score)"
-            secondBody.node?.removeFromParent()
-            
-        }
-            
-        else if firstBody.categoryBitMask == GameObjects.Octocat && secondBody.categoryBitMask == GameObjects.Wall || firstBody.categoryBitMask == GameObjects.Wall && secondBody.categoryBitMask == GameObjects.Octocat{
-            
-            enumerateChildNodes(withName: "wallPair", using: ({
-                (node, error) in
-                
-                node.speed = 0
-                self.removeAllActions()
-                
-            }))
-            if died == false{
-                died = true
-                createBTN()
-            }
-        }
-        else if firstBody.categoryBitMask == GameObjects.Octocat && secondBody.categoryBitMask == GameObjects.Ground || firstBody.categoryBitMask == GameObjects.Ground && secondBody.categoryBitMask == GameObjects.Octocat{
-            
-            enumerateChildNodes(withName: "wallPair", using: ({
-                (node, error) in
-                
-                node.speed = 0
-                self.removeAllActions()
-                
-            }))
-            if died == false{
-                died = true
-                createBTN()
-            }
-        }
-    }
 
     
     func createWalls(){
-        let wallPair = SKNode()
+        
+        
+        wallPair = SKNode()
+        //let wallPair = SKNode()
         wallPair.name = "wallPair"
         
         let topWall = SKSpriteNode(imageNamed: "Wall")
         let btmWall = SKSpriteNode(imageNamed: "Wall")
         
-        topWall.position = CGPoint(x: self.frame.width / 2 + 25, y: self.frame.height / 2 + 300)
-        btmWall.position = CGPoint(x: self.frame.width / 2 + 25, y: self.frame.height / 2 - 300)
+        topWall.position = CGPoint(x: self.frame.width + 25, y: self.frame.height / 2 + 350)
+        btmWall.position = CGPoint(x: self.frame.width + 25, y: self.frame.height / 2 - 350)
         
         topWall.setScale(0.5)
         btmWall.setScale(0.5)
@@ -205,7 +156,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         wallPair.zPosition = 1
         
-        
+        wallPair.run(moveRemove)
         
         self.addChild(wallPair)
     }
@@ -235,13 +186,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             moveRemove = SKAction.sequence([movePipes, removePipes])
             
             Octocat.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-            Octocat.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 30))
+            Octocat.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 45))
         }
         else{
-            Octocat.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-            Octocat.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 30))
-        }
             
+            if died == true{
+                
+            }
+            else{
+                Octocat.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+                Octocat.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 45))
+            }
+            
+        }
+        
+        for touch in touches{
+            let location = touch.location(in: self)
+            
+            if died == true{
+                if restart.contains(location){
+                    restartScene()
+                    
+                }
+            }
+        }
     }
     
     override func update(_ currentTime: TimeInterval) {
