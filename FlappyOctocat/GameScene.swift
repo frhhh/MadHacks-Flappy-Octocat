@@ -13,12 +13,13 @@ struct GameObjects {
     static let Octocat : UInt32 = 0x1 << 1
     static let Ground : UInt32 = 0x1 << 2
     static let Wall : UInt32 = 0x1 << 3
+    static let Score : UInt32 = 0x1 << 4
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
-    var entities = [GKEntity]()
-    var graphs = [String : GKGraph]()
+    //var entities = [GKEntity]()
+    //var graphs = [String : GKGraph]()
     
     var Ground = SKSpriteNode()
     var Octocat = SKSpriteNode()
@@ -27,12 +28,48 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var moveRemove = SKAction()
     var gameStart = Bool()
     
-    private var lastUpdateTime : TimeInterval = 0
-    private var label : SKLabelNode?
-    private var spinnyNode : SKShapeNode?
+    var score = Int()
+    let scoreLb = SKLabelNode()
+    
+    var died = Bool()
+    var restart = SKSpriteNode()
+    
+    //private var lastUpdateTime : TimeInterval = 0
+    //private var label : SKLabelNode?
+    //private var spinnyNode : SKShapeNode?
+    
+    func restartScene(){
+        
+        self.removeAllChildren()
+        self.removeAllActions()
+        died = false
+        gameStart = false
+        score = 0
+        createScene()
+        
+    }
+    
     
     func createScene() {
         self.physicsWorld.contactDelegate = self
+        
+        for i in 0..<2 {
+            let background = SKSpriteNode(imageNamed: "Background")
+            background.anchorPoint = CGPoint.zero
+            background.position = CGPoint(x: CGFloat(i) * self.frame.width, y: 0)
+            background.name = "background"
+            background.size = (self.view?.bounds.size)!
+            self.addChild(background)
+            
+        }
+        
+        
+        scoreLb.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2 + self.frame.height / 2.5)
+        scoreLb.text = "\(score)"
+        //scoreLb.fontName = "04b_19"
+        scoreLb.zPosition = 5
+        scoreLb.fontSize = 60
+        self.addChild(scoreLb)
         
         //set up ground image
         Ground = SKSpriteNode(imageNamed: "Ground")
@@ -57,7 +94,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         Octocat.physicsBody = SKPhysicsBody(circleOfRadius: Octocat.frame.height / 2)
         Octocat.physicsBody?.categoryBitMask = GameObjects.Octocat
         Octocat.physicsBody?.collisionBitMask = GameObjects.Ground | GameObjects.Wall
-        Octocat.physicsBody?.contactTestBitMask = GameObjects.Ground | GameObjects.Wall
+        Octocat.physicsBody?.contactTestBitMask = GameObjects.Ground | GameObjects.Wall | GameObjects.Score
         Octocat.physicsBody?.affectedByGravity = true
         Octocat.physicsBody?.isDynamic = true
         
@@ -70,6 +107,69 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func didMove(to view: SKView) {
         createScene()
     }
+    
+    func createBTN(){
+        
+        restart = SKSpriteNode(imageNamed: "RestartBtn")
+        restart.size = CGSize(width: 200, height: 100)
+        restart.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2)
+        restart.zPosition = 6
+        restart.setScale(0)
+        self.addChild(restart)
+        restart.run(SKAction.scale(to: 1.0, duration: 0.3))
+        
+    }
+    
+    func didBegin(_ contact: SKPhysicsContact) {
+        let firstBody = contact.bodyA
+        let secondBody = contact.bodyB
+        
+        
+        if firstBody.categoryBitMask == GameObjects.Score && secondBody.categoryBitMask == GameObjects.Octocat{
+            
+            score += 1
+            scoreLb.text = "\(score)"
+            firstBody.node?.removeFromParent()
+            
+        }
+        else if firstBody.categoryBitMask == GameObjects.Octocat && secondBody.categoryBitMask == GameObjects.Score {
+            
+            score += 1
+            scoreLb.text = "\(score)"
+            secondBody.node?.removeFromParent()
+            
+        }
+            
+        else if firstBody.categoryBitMask == GameObjects.Octocat && secondBody.categoryBitMask == GameObjects.Wall || firstBody.categoryBitMask == GameObjects.Wall && secondBody.categoryBitMask == GameObjects.Octocat{
+            
+            enumerateChildNodes(withName: "wallPair", using: ({
+                (node, error) in
+                
+                node.speed = 0
+                self.removeAllActions()
+                
+            }))
+            if died == false{
+                died = true
+                createBTN()
+            }
+        }
+        else if firstBody.categoryBitMask == GameObjects.Octocat && secondBody.categoryBitMask == GameObjects.Ground || firstBody.categoryBitMask == GameObjects.Ground && secondBody.categoryBitMask == GameObjects.Octocat{
+            
+            enumerateChildNodes(withName: "wallPair", using: ({
+                (node, error) in
+                
+                node.speed = 0
+                self.removeAllActions()
+                
+            }))
+            if died == false{
+                died = true
+                createBTN()
+            }
+        }
+    }
+
     
     func createWalls(){
         let wallPair = SKNode()
@@ -142,6 +242,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             Octocat.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 30))
         }
             
+    }
+    
+    override func update(_ currentTime: TimeInterval) {
+        /* Called before each frame is rendered */
+        
+        if gameStart == true{
+            if died == false{
+                enumerateChildNodes(withName: "background", using: ({
+                    (node, error) in
+                    
+                    let bg = node as! SKSpriteNode
+                    
+                    bg.position = CGPoint(x: bg.position.x - 2, y: bg.position.y)
+                    
+                    if bg.position.x <= -bg.size.width {
+                        bg.position = CGPoint(x: bg.position.x + bg.size.width * 2, y: bg.position.y)
+                        
+                    }
+                    
+                }))
+                
+            }
+        }
     }
 }
 
