@@ -15,40 +15,28 @@ struct GameObjects {
     static let Wall : UInt32 = 0x1 << 3
 }
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var entities = [GKEntity]()
     var graphs = [String : GKGraph]()
+    
+    var Ground = SKSpriteNode()
+    var Octocat = SKSpriteNode()
+    
+    var wallPair = SKNode()
+    var moveRemove = SKAction()
+    var gameStart = Bool()
     
     private var lastUpdateTime : TimeInterval = 0
     private var label : SKLabelNode?
     private var spinnyNode : SKShapeNode?
     
-    var Ground = SKSpriteNode()
-    var Octocat = SKSpriteNode()
-    
-//    override func didMove(to view: SKView) {
-//        
-//        //set up ground image
-//        Ground = SKSpriteNode(imageNamed: "Ground")
-//        Ground.setScale(1)
-//        Ground.position = CGPoint(x: self.frame.width / 2, y: 0 + Ground.frame.height / 2)
-//        self.addChild(Ground)
-//        
-//        //set up octocat image
-//        Octocat = SKSpriteNode(imageNamed: "Octocat")
-//        Octocat.size = CGSize(width: 200, height: 200)
-//        Octocat.position = CGPoint(x: self.frame.width / 2 - Octocat.frame.width, y: self.frame.height / 2)
-//        self.addChild(Octocat)
-//        
-//    }
-    
-    
-    override func sceneDidLoad() {
+    func createScene() {
+        self.physicsWorld.contactDelegate = self
         
         //set up ground image
         Ground = SKSpriteNode(imageNamed: "Ground")
-        Ground.setScale(1)
+        Ground.setScale(0.5)
         Ground.position = CGPoint(x: self.frame.width / 2, y: 0 + Ground.frame.height / 2)
         
         Ground.physicsBody = SKPhysicsBody(rectangleOf: Ground.size)
@@ -58,11 +46,12 @@ class GameScene: SKScene {
         Ground.physicsBody?.affectedByGravity = false
         Ground.physicsBody?.isDynamic = false
         
+        Ground.zPosition = 3
         self.addChild(Ground)
         
         //set up octocat image
         Octocat = SKSpriteNode(imageNamed: "Octocat")
-        Octocat.size = CGSize(width: 200, height: 200)
+        Octocat.size = CGSize(width: 60, height: 50)
         Octocat.position = CGPoint(x: self.frame.width / 2 - Octocat.frame.width, y: self.frame.height / 2)
         
         Octocat.physicsBody = SKPhysicsBody(circleOfRadius: Octocat.frame.height / 2)
@@ -71,53 +60,88 @@ class GameScene: SKScene {
         Octocat.physicsBody?.contactTestBitMask = GameObjects.Ground | GameObjects.Wall
         Octocat.physicsBody?.affectedByGravity = true
         Octocat.physicsBody?.isDynamic = true
+        
+        Octocat.zPosition = 2
         self.addChild(Octocat)
         
-        createWalls()
+        //createWalls()
+    }
+    
+    override func didMove(to view: SKView) {
+        createScene()
     }
     
     func createWalls(){
         let wallPair = SKNode()
+        wallPair.name = "wallPair"
         
         let topWall = SKSpriteNode(imageNamed: "Wall")
-        
         let btmWall = SKSpriteNode(imageNamed: "Wall")
         
-        topWall.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2 + 200)
-        btmWall.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2 - 1000)
+        topWall.position = CGPoint(x: self.frame.width / 2 + 25, y: self.frame.height / 2 + 300)
+        btmWall.position = CGPoint(x: self.frame.width / 2 + 25, y: self.frame.height / 2 - 300)
         
-        topWall.setScale(1)
-        btmWall.setScale(1)
+        topWall.setScale(0.5)
+        btmWall.setScale(0.5)
+        
+        topWall.physicsBody = SKPhysicsBody(rectangleOf: topWall.size)
+        topWall.physicsBody?.categoryBitMask = GameObjects.Wall
+        topWall.physicsBody?.collisionBitMask = GameObjects.Octocat
+        topWall.physicsBody?.contactTestBitMask = GameObjects.Octocat
+        topWall.physicsBody?.isDynamic = false
+        topWall.physicsBody?.affectedByGravity = false
+        
+        btmWall.physicsBody = SKPhysicsBody(rectangleOf: btmWall.size)
+        btmWall.physicsBody?.categoryBitMask = GameObjects.Wall
+        btmWall.physicsBody?.collisionBitMask = GameObjects.Octocat
+        btmWall.physicsBody?.contactTestBitMask = GameObjects.Octocat
+        btmWall.physicsBody?.isDynamic = false
+        btmWall.physicsBody?.affectedByGravity = false
+        
+        topWall.zRotation = CGFloat(M_PI)
         
         wallPair.addChild(topWall)
         wallPair.addChild(btmWall)
+        
+        wallPair.zPosition = 1
+        
+        
         
         self.addChild(wallPair)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let label = self.label {
-            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
+        if gameStart == false{
+            
+            gameStart =  true
+            
+            self.Octocat.physicsBody?.affectedByGravity = true
+            
+            let spawn = SKAction.run({
+                () in
+                
+                self.createWalls()
+                
+            })
+            
+            let delay = SKAction.wait(forDuration: 1.5)
+            let SpawnDelay = SKAction.sequence([spawn, delay])
+            let spawnDelayForever = SKAction.repeatForever(SpawnDelay)
+            self.run(spawnDelayForever)
+            
+            let distance = CGFloat(self.frame.width + wallPair.frame.width)
+            let movePipes = SKAction.moveBy(x: -distance - 50, y: 0, duration: TimeInterval(0.008 * distance))
+            let removePipes = SKAction.removeFromParent()
+            moveRemove = SKAction.sequence([movePipes, removePipes])
+            
+            Octocat.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+            Octocat.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 30))
         }
-    }
-    
-    
-    override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
-        
-        // Initialize _lastUpdateTime if it has not already been
-        if (self.lastUpdateTime == 0) {
-            self.lastUpdateTime = currentTime
+        else{
+            Octocat.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+            Octocat.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 30))
         }
-        
-        // Calculate time since last update
-        let dt = currentTime - self.lastUpdateTime
-        
-        // Update entities
-        for entity in self.entities {
-            entity.update(deltaTime: dt)
-        }
-        
-        self.lastUpdateTime = currentTime
+            
     }
 }
+
