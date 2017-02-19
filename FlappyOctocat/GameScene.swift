@@ -7,6 +7,7 @@
 //
 
 import SpriteKit
+import AVFoundation
 //import GameplayKit
 
 struct GameObjects {
@@ -34,9 +35,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var died = Bool()
     var restart = SKSpriteNode()
     
+    var playerBG = AVAudioPlayer()
+    var playerJP = AVAudioPlayer()
+    
+    
+    
     //private var lastUpdateTime : TimeInterval = 0
     //private var label : SKLabelNode?
     //private var spinnyNode : SKShapeNode?
+    
+    func playSound() {
+        
+        do {
+            playerBG = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "NyanCat", ofType: "mp3")!))
+            playerBG.prepareToPlay()
+        } catch let error {
+            print(error)
+        }
+        
+        do {
+            playerJP = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "jump", ofType: "wav")!))
+            playerJP.prepareToPlay()
+        } catch let error {
+            print(error)
+        }
+    }
     
     func restartScene(){
         
@@ -52,7 +75,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func createScene() {
         
-        print(UIFont.familyNames)
+        //print(UIFont.familyNames)
         
         self.physicsWorld.contactDelegate = self
         
@@ -107,6 +130,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func didMove(to view: SKView) {
+        playSound()
         createScene()
     }
     
@@ -153,6 +177,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }))
             if died == false{
                 died = true
+                self.playerBG.stop()
                 createBTN()
             }
         }
@@ -192,7 +217,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //let wallPair = SKNode()
         wallPair.name = "wallPair"
         
-        let topWall = SKSpriteNode(imageNamed: "Wall_Redbull_02")
+        let topWall = SKSpriteNode(imageNamed: "top_wall")
         let btmWall = SKSpriteNode(imageNamed: "Wall_Redbull_02")
         
         topWall.position = CGPoint(x: self.frame.width + 25, y: self.frame.height / 2 + 350)
@@ -215,7 +240,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         btmWall.physicsBody?.isDynamic = false
         btmWall.physicsBody?.affectedByGravity = false
         
-        topWall.zRotation = CGFloat(M_PI)
+        //topWall.zRotation = CGFloat(M_PI)
         
         wallPair.addChild(topWall)
         wallPair.addChild(btmWall)
@@ -237,6 +262,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             gameStart =  true
             
+            self.playerBG.play()
+            
             self.Octocat.physicsBody?.affectedByGravity = true
             
             let spawn = SKAction.run({
@@ -256,8 +283,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let removePipes = SKAction.removeFromParent()
             moveRemove = SKAction.sequence([movePipes, removePipes])
             
+            playerJP.play()
             Octocat.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-            Octocat.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 50))
+            Octocat.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 45))
         }
         else{
             
@@ -265,8 +293,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
             }
             else{
+                playerJP.play()
                 Octocat.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                Octocat.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 50))
+                Octocat.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 45))
             }
             
         }

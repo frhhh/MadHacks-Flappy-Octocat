@@ -18,6 +18,8 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        Thread.sleep(forTimeInterval: 3.0)
+        
         if let scene = GameScene(fileNamed:"GameScene") {
             // Configure the view.
             let skView = self.view as! SKView
@@ -34,17 +36,13 @@ class GameViewController: UIViewController {
             skView.presentScene(scene)
         }
     }
-
+    
     override var shouldAutorotate: Bool {
-        return true
+        return false  //disable totation
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            return .allButUpsideDown
-        } else {
-            return .all
-        }
+        return UIInterfaceOrientationMask.portrait   //disable totation
     }
 
     override func didReceiveMemoryWarning() {

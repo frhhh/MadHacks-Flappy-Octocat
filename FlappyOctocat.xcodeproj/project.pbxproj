@@ -16,6 +16,9 @@
 		01DBD94E1E59072E00710B5F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 01DBD94C1E59072E00710B5F /* Main.storyboard */; };
 		01DBD9501E59072E00710B5F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 01DBD94F1E59072E00710B5F /* Assets.xcassets */; };
 		01DBD9531E59072E00710B5F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 01DBD9511E59072E00710B5F /* LaunchScreen.storyboard */; };
+		01ED18EE1E59E0920040C93A /* m1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 01ED18ED1E59E0920040C93A /* m1.mp3 */; };
+		01ED18F01E59E38A0040C93A /* NyanCat.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 01ED18EF1E59E38A0040C93A /* NyanCat.mp3 */; };
+		01ED18F21E59E59D0040C93A /* jump.wav in Resources */ = {isa = PBXBuildFile; fileRef = 01ED18F11E59E59D0040C93A /* jump.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +33,9 @@
 		01DBD94F1E59072E00710B5F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		01DBD9521E59072E00710B5F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		01DBD9541E59072E00710B5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		01ED18ED1E59E0920040C93A /* m1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = m1.mp3; sourceTree = "<group>"; };
+		01ED18EF1E59E38A0040C93A /* NyanCat.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = NyanCat.mp3; sourceTree = "<group>"; };
+		01ED18F11E59E59D0040C93A /* jump.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = jump.wav; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,11 +75,22 @@
 				01DBD94A1E59072E00710B5F /* GameViewController.swift */,
 				01BEB4831E597C52009C254A /* RandomFunction.swift */,
 				01DBD94C1E59072E00710B5F /* Main.storyboard */,
+				01ED18EC1E59E0210040C93A /* Music */,
 				01DBD94F1E59072E00710B5F /* Assets.xcassets */,
 				01DBD9511E59072E00710B5F /* LaunchScreen.storyboard */,
 				01DBD9541E59072E00710B5F /* Info.plist */,
 			);
 			path = FlappyOctocat;
+			sourceTree = "<group>";
+		};
+		01ED18EC1E59E0210040C93A /* Music */ = {
+			isa = PBXGroup;
+			children = (
+				01ED18F11E59E59D0040C93A /* jump.wav */,
+				01ED18EF1E59E38A0040C93A /* NyanCat.mp3 */,
+				01ED18ED1E59E0920040C93A /* m1.mp3 */,
+			);
+			name = Music;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,8 +154,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				01BEB4861E5998E5009C254A /* pixel_font01.TTF in Resources */,
+				01ED18F01E59E38A0040C93A /* NyanCat.mp3 in Resources */,
 				01DBD94E1E59072E00710B5F /* Main.storyboard in Resources */,
+				01ED18F21E59E59D0040C93A /* jump.wav in Resources */,
 				01DBD9451E59072E00710B5F /* GameScene.sks in Resources */,
+				01ED18EE1E59E0920040C93A /* m1.mp3 in Resources */,
 				01DBD9501E59072E00710B5F /* Assets.xcassets in Resources */,
 				01DBD9531E59072E00710B5F /* LaunchScreen.storyboard in Resources */,
 			);
@@ -277,6 +297,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				DEVELOPMENT_TEAM = E5WM2Z52GU;
 				INFOPLIST_FILE = FlappyOctocat/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
@@ -284,6 +305,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.huweichu.FlappyOctocat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -291,6 +313,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				DEVELOPMENT_TEAM = E5WM2Z52GU;
 				INFOPLIST_FILE = FlappyOctocat/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
@@ -298,6 +321,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.huweichu.FlappyOctocat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
