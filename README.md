@@ -1,7 +1,4 @@
-# MadHacks-Flappy-Octocat
-MadHacks 2017 - Game Project: Flappy Octocat Game (iOS App)
-
-# MadHacks Peoject - *Flappy Octocatr*
+# MadHacks 2017 Peoject - *Flappy Octocat*
 
 **Flappy Octocatr** is a iOS game app inspire by by Flappy Bird and mascot of GitHub - Octocat. 
 
