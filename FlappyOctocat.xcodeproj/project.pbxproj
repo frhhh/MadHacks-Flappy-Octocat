@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		01BEB4841E597C52009C254A /* RandomFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01BEB4831E597C52009C254A /* RandomFunction.swift */; };
+		01BEB4861E5998E5009C254A /* pixel_font01.TTF in Resources */ = {isa = PBXBuildFile; fileRef = 01BEB4851E5997C0009C254A /* pixel_font01.TTF */; };
 		01DBD9431E59072E00710B5F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01DBD9421E59072E00710B5F /* AppDelegate.swift */; };
 		01DBD9451E59072E00710B5F /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 01DBD9441E59072E00710B5F /* GameScene.sks */; };
 		01DBD9491E59072E00710B5F /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01DBD9481E59072E00710B5F /* GameScene.swift */; };
@@ -19,6 +20,7 @@
 
 /* Begin PBXFileReference section */
 		01BEB4831E597C52009C254A /* RandomFunction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomFunction.swift; sourceTree = "<group>"; };
+		01BEB4851E5997C0009C254A /* pixel_font01.TTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = pixel_font01.TTF; sourceTree = "<group>"; };
 		01DBD93F1E59072E00710B5F /* FlappyOctocat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlappyOctocat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		01DBD9421E59072E00710B5F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		01DBD9441E59072E00710B5F /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -60,6 +62,7 @@
 		01DBD9411E59072E00710B5F /* FlappyOctocat */ = {
 			isa = PBXGroup;
 			children = (
+				01BEB4851E5997C0009C254A /* pixel_font01.TTF */,
 				01DBD9421E59072E00710B5F /* AppDelegate.swift */,
 				01DBD9441E59072E00710B5F /* GameScene.sks */,
 				01DBD9481E59072E00710B5F /* GameScene.swift */,
@@ -133,6 +136,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				01BEB4861E5998E5009C254A /* pixel_font01.TTF in Resources */,
 				01DBD94E1E59072E00710B5F /* Main.storyboard in Resources */,
 				01DBD9451E59072E00710B5F /* GameScene.sks in Resources */,
 				01DBD9501E59072E00710B5F /* Assets.xcassets in Resources */,

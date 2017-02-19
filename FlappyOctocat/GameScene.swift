@@ -13,6 +13,7 @@ struct GameObjects {
     static let Octocat : UInt32 = 0x1 << 1
     static let Ground : UInt32 = 0x1 << 2
     static let Wall : UInt32 = 0x1 << 3
+    static let Score : UInt32 = 0x1 << 4
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
@@ -50,10 +51,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     
     func createScene() {
+        
+        print(UIFont.familyNames)
+        
         self.physicsWorld.contactDelegate = self
         
         for i in 0..<2 {
-            let background = SKSpriteNode(imageNamed: "Background")
+            let background = SKSpriteNode(imageNamed: "pixel_background")
             background.anchorPoint = CGPoint.zero
             background.position = CGPoint(x: CGFloat(i) * self.frame.width, y: 0)
             background.name = "background"
@@ -62,17 +66,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         }
         
-        
         scoreLb.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2 + self.frame.height / 2.5)
-        scoreLb.text = "\(score)"
-        //scoreLb.fontName = "04b_19"
+        scoreLb.text = "GitHub Star(s):\(score)"
+        scoreLb.fontName = "04b"
         scoreLb.zPosition = 5
-        scoreLb.fontSize = 60
+        scoreLb.fontSize = 25
+        //scoreLb.fontColor
         self.addChild(scoreLb)
         
         //set up ground image
-        Ground = SKSpriteNode(imageNamed: "Ground")
-        Ground.setScale(0.5)
+        Ground = SKSpriteNode(imageNamed: "pixel_keyboard")
+        Ground.setScale(0.42)
         Ground.position = CGPoint(x: self.frame.width / 2, y: 0 + Ground.frame.height / 2)
         
         Ground.physicsBody = SKPhysicsBody(rectangleOf: Ground.size)
@@ -93,13 +97,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         Octocat.physicsBody = SKPhysicsBody(circleOfRadius: Octocat.frame.height / 2)
         Octocat.physicsBody?.categoryBitMask = GameObjects.Octocat
         Octocat.physicsBody?.collisionBitMask = GameObjects.Ground | GameObjects.Wall
+        Octocat.physicsBody?.contactTestBitMask = GameObjects.Ground | GameObjects.Wall | GameObjects.Score
         Octocat.physicsBody?.affectedByGravity = false
         Octocat.physicsBody?.isDynamic = true
         
         Octocat.zPosition = 2
         self.addChild(Octocat)
         
-        //createWalls()
     }
     
     override func didMove(to view: SKView) {
@@ -117,9 +121,71 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         restart.run(SKAction.scale(to: 1.0, duration: 0.3))
         
     }
+    
+    func didBegin(_ contact: SKPhysicsContact) {
+        let firstBody = contact.bodyA
+        let secondBody = contact.bodyB
+        
+        
+        if firstBody.categoryBitMask == GameObjects.Score && secondBody.categoryBitMask == GameObjects.Octocat{
+            
+            score += 1
+            scoreLb.text = "GitHub Star(s):\(score)"
+            firstBody.node?.removeFromParent()
+            
+        }
+        else if firstBody.categoryBitMask == GameObjects.Octocat && secondBody.categoryBitMask == GameObjects.Score {
+            
+            score += 1
+            scoreLb.text = "GitHub Star(s):\(score)"
+            secondBody.node?.removeFromParent()
+            
+        }
+            
+        else if firstBody.categoryBitMask == GameObjects.Octocat && secondBody.categoryBitMask == GameObjects.Wall || firstBody.categoryBitMask == GameObjects.Wall && secondBody.categoryBitMask == GameObjects.Octocat{
+            
+            enumerateChildNodes(withName: "wallPair", using: ({
+                (node, error) in
+                
+                node.speed = 0
+                self.removeAllActions()
+                
+            }))
+            if died == false{
+                died = true
+                createBTN()
+            }
+        }
+        else if firstBody.categoryBitMask == GameObjects.Octocat && secondBody.categoryBitMask == GameObjects.Ground || firstBody.categoryBitMask == GameObjects.Ground && secondBody.categoryBitMask == GameObjects.Octocat{
+            
+            enumerateChildNodes(withName: "wallPair", using: ({
+                (node, error) in
+                
+                node.speed = 0
+                self.removeAllActions()
+                
+            }))
+            if died == false{
+                died = true
+                createBTN()
+            }
+        }
+    }
 
     
     func createWalls(){
+        
+        let scoreNode = SKSpriteNode(imageNamed: "star")
+        
+        scoreNode.size = CGSize(width: 50, height: 50)
+        scoreNode.position = CGPoint(x: self.frame.width + 25, y: self.frame.height / 2)
+        scoreNode.physicsBody = SKPhysicsBody(rectangleOf: scoreNode.size)
+        scoreNode.physicsBody?.affectedByGravity = false
+        scoreNode.physicsBody?.isDynamic = false
+        scoreNode.physicsBody?.categoryBitMask = GameObjects.Score
+        scoreNode.physicsBody?.collisionBitMask = 0
+        scoreNode.physicsBody?.contactTestBitMask = GameObjects.Octocat
+        scoreNode.color = SKColor.blue
         
         
         wallPair = SKNode()
@@ -156,6 +222,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         wallPair.zPosition = 1
         
+        
+        let randomPosition = CGFloat.random(min: -200, max: 200)
+        wallPair.position.y = wallPair.position.y +  randomPosition
+        wallPair.addChild(scoreNode)
+        
         wallPair.run(moveRemove)
         
         self.addChild(wallPair)
@@ -186,7 +257,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             moveRemove = SKAction.sequence([movePipes, removePipes])
             
             Octocat.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-            Octocat.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 45))
+            Octocat.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 50))
         }
         else{
             
@@ -195,7 +266,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
             else{
                 Octocat.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                Octocat.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 45))
+                Octocat.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 50))
             }
             
         }
