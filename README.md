@@ -38,13 +38,6 @@ YouTube Demo: https://youtu.be/drUYAxartH8
 
 2. Swift open source offcial website : https://swift.org/
 
-
-Describe any challenges encountered while building the app.
-
-1. Sometimes take some time to find a bug
-
-2. Come with the idea how to show error massage
-
 ## License
 
     Copyright 2017 Weichu Hu (Frank)
