@@ -5,6 +5,7 @@
 Player touch then screen to make octocat fly and avoid obstacles.
 
 The App made by Apple Xcode using swift 3.
+
 <img src='https://github.com/frhhh/MadHacks-Flappy-Octocat/blob/master/FlappyOctocat_icon.png' width='' alt='App icon' />
 
 Time spent: **20** hours spent in total
