@@ -1,6 +1,3 @@
-
-
-
 //
 //  GameViewController.swift
 //  FlappyOctocat
@@ -18,7 +15,7 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        Thread.sleep(forTimeInterval: 3.0)
+        Thread.sleep(forTimeInterval: 3)
         
         if let scene = GameScene(fileNamed:"GameScene") {
             // Configure the view.

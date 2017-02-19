@@ -37,7 +37,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var playerBG = AVAudioPlayer()
     var playerJP = AVAudioPlayer()
-    
+    var playerStop = AVAudioPlayer()
     
     
     //private var lastUpdateTime : TimeInterval = 0
@@ -56,6 +56,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         do {
             playerJP = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "jump", ofType: "wav")!))
             playerJP.prepareToPlay()
+        } catch let error {
+            print(error)
+        }
+        
+        do {
+            playerStop = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "stop_cut", ofType: "mp3")!))
+            playerStop.prepareToPlay()
         } catch let error {
             print(error)
         }
@@ -135,6 +142,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func createBTN(){
+        self.playerStop.play()
+        self.playerBG.stop()
         
         restart = SKSpriteNode(imageNamed: "Restart")
         restart.size = CGSize(width: 200, height: 100)
@@ -177,7 +186,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }))
             if died == false{
                 died = true
-                self.playerBG.stop()
                 createBTN()
             }
         }
