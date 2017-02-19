@@ -24,9 +24,11 @@ Time spent: **20** hours spent in total
 
 Here's a walkthrough of implemented user stories:
 
-<img src='https://github.com/frhhh/MadHacks-Flappy-Octocat/Demo.gif' width='' alt='Video Walkthrough' />
+<img src='https://github.com/frhhh/MadHacks-Flappy-Octocat/blob/master/Flappy%20Octocat%20Demo%2002.gif' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
+
+YouTube Demo: https://youtu.be/drUYAxartH8
 
 ## Resource
 
@@ -43,7 +45,7 @@ Describe any challenges encountered while building the app.
 
 ## License
 
-    Copyright 2017 Weichu Hu
+    Copyright 2017 Weichu Hu (Frank)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
