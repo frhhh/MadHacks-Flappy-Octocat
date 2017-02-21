@@ -120,8 +120,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(Ground)
         
         //set up octocat image
-        Octocat = SKSpriteNode(imageNamed: "Octocat_02")
-        Octocat.size = CGSize(width: 60, height: 50)
+        Octocat = SKSpriteNode(imageNamed: "Nyancat")
+        Octocat.size = CGSize(width: 50, height: 30)
         Octocat.position = CGPoint(x: self.frame.width / 2 - Octocat.frame.width, y: self.frame.height / 2)
         
         Octocat.physicsBody = SKPhysicsBody(circleOfRadius: Octocat.frame.height / 2)
@@ -293,7 +293,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             playerJP.play()
             Octocat.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-            Octocat.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 45))
+            Octocat.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 20))
         }
         else{
             
@@ -303,7 +303,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             else{
                 playerJP.play()
                 Octocat.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                Octocat.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 45))
+                Octocat.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 20))
             }
             
         }
